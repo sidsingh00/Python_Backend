@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate,login
 from django.contrib import messages
+from .models import *
 
 # Create your views here.
 def index(request):
@@ -33,5 +34,17 @@ def admin_dashboard(request):
 def create_class(request):
 
     if request.method == 'POST':
-        return 
+        try:
+            class_name = request.POST.get('classname')
+            class_numeric = request.POST.get('classnamenumeric')
+            section = request.POST.get('section')
+            Class.objects.create(class_name=class_name,class_numeric=class_numeric,section=section)
+            message.success(request,"Class created successfully")
+            redirect(create_class)
+
+
+        except Exception as e:
+            messages.error(request,f"Something went wrong:{str(e)}")
+
+    
     return render(request,'create_class.html')
