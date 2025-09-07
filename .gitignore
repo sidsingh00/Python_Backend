@@ -1,0 +1,4 @@
+venv
+StudentResultManagement/__pycache__
+result/migrations/__pycache__
+result/__pycache__
