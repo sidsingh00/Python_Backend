@@ -23,6 +23,8 @@ urlpatterns = [
     path("admin-login", admin_login, name="admin-login"),
     path('',index,name='home'),
     path('admin_dashboard',admin_dashboard,name='admin_dashboard'),
-    path('create_class/',create_class, name = 'create_class')
+    path('create_class/',create_class, name = 'create_class'),
+    path('admin_logout/',admin_login,name= 'admin_logout'),
+    path('manage_classes/',manage_classes, name='manage_classes')
 
 ]

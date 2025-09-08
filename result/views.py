@@ -1,7 +1,8 @@
 from django.shortcuts import render,redirect
-from django.contrib.auth import authenticate,login
+from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from .models import *
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def index(request):
@@ -28,9 +29,11 @@ def admin_login(request):
     return render(request,'admin_login.html',locals()) 
 
 def admin_dashboard(request):
+    if not request.user.is_authenticated:
+        return redirect('admin-login')
     return render(request,'admin_dashboard.html')
 
-
+@login_required
 def create_class(request):
 
     if request.method == 'POST':
@@ -48,3 +51,25 @@ def create_class(request):
 
     
     return render(request,'create_class.html')
+
+
+def admin_logout(request):
+    logout(request)
+    return redirect('admin-login')
+
+from django.shortcuts import get_object_or_404
+@login_required
+def manage_classes(request):
+    classes = Class.objects.all()
+    if request.GET.get('delete'):
+        try:
+            class_id = request.GET.get('delete')
+            class_obj = get_object_or_404(Class,id=class_id)
+            class_obj.delete()
+            messages.success(request,"Class deleted successfully")
+        except Exception as e:
+            messages.error(request,f"Something went wrong:{str(e)}")
+    else:
+        messages.error(request,f"Something went wrong:{str(e)}")
+
+    return render(request,'manage_classes.html',locals())
